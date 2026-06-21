@@ -189,6 +189,9 @@ async function startServer() {
   app.get('/robots.txt', (req, res) => {
     const robotsContent = `User-agent: *
 Allow: /
+Allow: /llms.txt
+Allow: /#about
+Allow: /#contact
 Sitemap: ${process.env.APP_URL || 'https://startupapology.vercel.app'}/sitemap.xml
 `;
     res.type('text/plain').send(robotsContent);
@@ -207,6 +210,21 @@ Sitemap: ${process.env.APP_URL || 'https://startupapology.vercel.app'}/sitemap.x
     <loc>${baseUrl}/</loc>
     <changefreq>always</changefreq>
     <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/#about</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/#contact</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/llms.txt</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
   </url>
 `;
 
@@ -324,6 +342,12 @@ Sitemap: ${process.env.APP_URL || 'https://startupapology.vercel.app'}/sitemap.x
         <link rel="canonical" href="${baseUrl}/" />
         <link rel="alternate" type="application/rss+xml" title="Startup Apology Tracker RSS Feed" href="${baseUrl}/rss.xml" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="me" href="https://www.linkedin.com/in/techiral" />
+        <link rel="me" href="https://github.com/lakshyabuilds" />
+        <link rel="me" href="https://www.youtube.com/@techiral" />
+        <link rel="me" href="https://www.youtube.com/@lakshyabuild" />
+        <link rel="me" href="https://www.instagram.com/techiral" />
+        <link rel="me" href="https://www.instagram.com/lakshya.build" />
         ${structuredDataHtml}
       `;
 
