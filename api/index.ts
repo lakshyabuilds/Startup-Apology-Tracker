@@ -1,10 +1,8 @@
-import express from 'express';
+import type { Request, Response } from 'express';
 import appPromise from '../server';
 
-const app = express();
+export default async function handler(req: Request, res: Response) {
+  const app = await appPromise;
+  app(req, res);
+}
 
-appPromise.then(serverApp => {
-  app.use(serverApp);
-});
-
-export default app;

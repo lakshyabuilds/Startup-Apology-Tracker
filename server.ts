@@ -1,6 +1,5 @@
 import express from 'express';
 import path from 'path';
-import { createServer as createViteServer } from 'vite';
 import fs from 'fs';
 
 const app = express();
@@ -264,6 +263,7 @@ Sitemap: ${process.env.APP_URL || 'https://startupapology.vercel.app'}/sitemap.x
   let vite: any;
 
   if (!isProd) {
+    const { createServer: createViteServer } = await import('vite');
     vite = await createViteServer({
       server: { middlewareMode: true },
       appType: 'spa',
@@ -284,7 +284,7 @@ Sitemap: ${process.env.APP_URL || 'https://startupapology.vercel.app'}/sitemap.x
         template = fs.readFileSync(path.resolve(process.cwd(), 'index.html'), 'utf-8');
         template = await vite.transformIndexHtml(req.originalUrl, template);
       } else {
-        template = fs.readFileSync(path.resolve(process.cwd(), 'dist/index.html'), 'utf-8');
+        template = fs.readFileSync(path.resolve(process.cwd(), 'dist/ssr.html'), 'utf-8');
       }
 
       // Fetch the data server-side
