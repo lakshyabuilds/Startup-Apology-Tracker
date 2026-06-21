@@ -102,27 +102,52 @@ async function getApologies() {
 
 // Generate minimal HTML version for crawlers/AEO
 function generateSsrHtml(apologies: HNStory[], reqPath: string) {
+  const navHtml = `
+    <nav aria-label="Primary Navigation">
+      <a href="/">[ Directory ]</a> | 
+      <a href="/about">[ About ]</a> | 
+      <a href="/contact">[ Contact ]</a> |
+      <a href="/llms.txt">[ LLMs Documentation ]</a>
+    </nav>
+    <hr />
+  `;
+
+  let contentHtml = '';
+
   if (reqPath === '/about') {
-    return `<article><h2>[ 1. WHAT IS THIS? ]</h2><p>Tech companies take your money. They break your trust. Then they post an apology.</p><p>This directory stops the amnesia. It’s an immutable public ledger.</p></article>`;
-  }
-  if (reqPath === '/contact') {
-    return `<article><h2>[ DIRECT COMMUNICATION CHANNELS ]</h2><p>Email: lakshya.automate@gmail.com</p><p>LinkedIn: https://www.linkedin.com/in/techiral</p><p>Instagram: @techiral</p></article>`;
+    contentHtml = `<article>
+      <h2>[ 1. WHAT IS THIS? ]</h2>
+      <p>Tech companies take your money. They break your trust. Then they post an apology. This is an immutable public ledger by 18-year-old developer Lakshya Gupta (Techiral) for accountability.</p>
+      
+      <h2>[ 2. METHODOLOGY: THE VOLATILE SCORE ]</h2>
+      <p>We don't weigh soft metrics. We rank corporate failures using an automated index we call the <strong>Volatile Score</strong>. It's a mathematically direct reflection of public outrage, stripping away time-decay algorithms that let old news fade gracefully.</p>
+      <p><code>V = (P × 1.2) + (C × 2.5) + (Cv × 5.0)</code> (Where V is Volatile Score, P is absolute points, C is comment volume, and Cv is comment velocity)</p>
+      <p>Unlike traditional ranking algorithms like Hacker News (<code>Score = (P - 1) / (T + 2)^1.5</code>) which use time-decay (T) so that old news slides off the front page, our Volatile Score <strong>eliminates T entirely</strong>. We heavily weight <strong>Comment Velocity (Cv)</strong>. Why? Because thousands of users furiously typing comments at once indicates a complete breakdown of trust. Raw points (P) establish reach, but furious engagement (C and Cv) establishes the depth of the PR carnage.</p>
+      <p><strong>The bottom line:</strong> A high Volatile Score mathematically proves an intense, viral incident. These failures shouldn't fade away elegantly with time. This score makes them immutable.</p>
+      
+      <h2>[ 3. HOW IT WORKS ALGORITHMICALLY ]</h2>
+      <p>A script algorithmically crawls platforms scanning for trigger phrases like "apology", extracts the submission, calculates the Volatile Score, and creates an immutable record.</p>
+    </article>`;
+  } else if (reqPath === '/contact') {
+    contentHtml = `<article><h2>[ DIRECT COMMUNICATION CHANNELS ]</h2><p>Email: lakshya.automate@gmail.com</p><p>LinkedIn: <a href="https://www.linkedin.com/in/techiral">https://www.linkedin.com/in/techiral</a></p><p>GitHub: <a href="https://github.com/lakshyabuilds">https://github.com/lakshyabuilds</a></p><p>Instagram: @techiral</p></article>`;
+  } else {
+    if (!apologies || apologies.length === 0) contentHtml = "<p>No apologies found.</p>";
+    else {
+      contentHtml = `<ul style="list-style-type: none; padding: 0;">`;
+      for (const item of apologies) {
+        contentHtml += `
+          <li style="margin-bottom: 24px; padding: 16px; border: 1px solid #333;" itemscope itemtype="https://schema.org/NewsArticle">
+            <h2 itemprop="headline"><a itemprop="url" href="${item.url}" style="color: #FF3333; text-decoration: none;">${item.title.replace(/</g, "&lt;")}</a></h2>
+            <p>By <span itemprop="author">${item.author}</span> on <time itemprop="datePublished" datetime="${item.createdAt}">${new Date(item.createdAt).toLocaleDateString()}</time></p>
+            <p>${item.points} Points • ${item.numComments} Comments</p>
+          </li>
+        `;
+      }
+      contentHtml += `</ul>`;
+    }
   }
 
-  if (!apologies || apologies.length === 0) return "<p>No apologies found.</p>";
-  
-  let html = `<ul style="list-style-type: none; padding: 0;">`;
-  for (const item of apologies) {
-    html += `
-      <li style="margin-bottom: 24px; padding: 16px; border: 1px solid #333;" itemscope itemtype="https://schema.org/NewsArticle">
-        <h2 itemprop="headline"><a itemprop="url" href="${item.url}" style="color: #FF3333; text-decoration: none;">${item.title.replace(/</g, "&lt;")}</a></h2>
-        <p>By <span itemprop="author">${item.author}</span> on <time itemprop="datePublished" datetime="${item.createdAt}">${new Date(item.createdAt).toLocaleDateString()}</time></p>
-        <p>${item.points} Points • ${item.numComments} Comments</p>
-      </li>
-    `;
-  }
-  html += `</ul>`;
-  return html;
+  return navHtml + contentHtml;
 }
 
 // Generate JSON-LD Structured Data for AEO (AI Engine Optimization)
@@ -236,7 +261,10 @@ Sitemap: ${process.env.APP_URL || 'https://startupapology.vercel.app'}/sitemap.x
 `;
 
     // Add individual items as news
-    const escapeXml = (unsafe: string) => unsafe.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
+    const escapeXml = (unsafe: string | null | undefined) => {
+      if (!unsafe) return '';
+      return String(unsafe).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
+    };
     for (const item of data.slice(0, 50)) {
       xml += `  <url>
     <loc>${escapeXml(item.url || '')}</loc>
@@ -270,14 +298,17 @@ Sitemap: ${process.env.APP_URL || 'https://startupapology.vercel.app'}/sitemap.x
   <atom:link href="${baseUrl}/rss.xml" rel="self" type="application/rss+xml" />
 `;
 
-    const escapeXml = (unsafe: string) => unsafe.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
+    const escapeXml2 = (unsafe: string | null | undefined) => {
+      if (!unsafe) return '';
+      return String(unsafe).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
+    };
     for (const item of data.slice(0, 50)) {
       rss += `  <item>
-    <title>${escapeXml(item.title)}</title>
-    <link>${escapeXml(item.url || '')}</link>
+    <title>${escapeXml2(item.title)}</title>
+    <link>${escapeXml2(item.url || '')}</link>
     <guid isPermaLink="false">${item.id}</guid>
     <pubDate>${new Date(item.createdAt).toUTCString()}</pubDate>
-    <description>Public apology by ${escapeXml(item.author || 'Unknown')}. Tracked incident with ${item.numComments} reactions.</description>
+    <description>Public apology by ${escapeXml2(item.author || 'Unknown')}. Tracked incident with ${item.numComments} reactions.</description>
   </item>
 `;
     }

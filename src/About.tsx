@@ -52,7 +52,49 @@ export default function About() {
           <tbody>
             <tr>
               <td className="bg-[#e0e0e0] p-2 border-2 border-outset border-gray-400 font-mono text-sm font-bold">
-                <h2>[ 3. HOW IT WORKS ]</h2>
+                <h2>[ 3. METHODOLOGY: THE VOLATILE SCORE ]</h2>
+              </td>
+            </tr>
+            <tr>
+              <td className="p-4 border border-gray-400 align-top bg-white font-serif text-base leading-relaxed">
+                <p className="mb-4">
+                  We don't weigh soft metrics. We rank corporate failures using an automated index we call the <strong>Volatile Score</strong>. It's a mathematically direct reflection of public outrage, stripping away time-decay algorithms that let old news fade gracefully.
+                </p>
+                <div className="bg-gray-100 p-3 mb-4 font-mono text-sm border-l-4 border-red-500">
+                  V = (P × 1.2) + (C × 2.5) + (Cv × 5.0)
+                  <br />
+                  <br />
+                  Where:
+                  <br />
+                  - <strong>V</strong>: Volatile Score (Raw Crisis Magnitude)
+                  <br />
+                  - <strong>P</strong>: Absolute Hacker News Points (Upvotes - Downvotes)
+                  <br />
+                  - <strong>C</strong>: Total Comment Volume (Absolute Engagement)
+                  <br />
+                  - <strong>Cv</strong>: Comment Velocity (Comments per hour during peak outrage)
+                </div>
+                <p className="mb-4">
+                  Unlike traditional ranking algorithms like Hacker News (<code>Score = (P - 1) / (T + 2)^1.5</code>) which use time-decay (T) so that old news slides off the front page, our Volatile Score <strong>eliminates T entirely</strong>. 
+                </p>
+                <p className="mb-4">
+                  We heavily weight <strong>Comment Velocity (Cv)</strong>. Why? Because thousands of users furiously typing comments at once indicates a complete breakdown of trust, not just a casual upvote in passing. Raw points (P) establish reach, but furious engagement (C and Cv) establishes the depth of the PR carnage.
+                </p>
+                <p>
+                  <strong>The bottom line:</strong> A high Volatile Score mathematically proves an intense, viral incident. These failures shouldn't fade away elegantly with time. This score makes them immutable.
+                </p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <table className="w-full border-collapse">
+          <tbody>
+            <tr>
+              <td className="bg-[#e0e0e0] p-2 border-2 border-outset border-gray-400 font-mono text-sm font-bold">
+                <h2>[ 4. HOW IT WORKS ALGORITHMICALLY ]</h2>
               </td>
             </tr>
             <tr>
@@ -61,8 +103,8 @@ export default function About() {
                   There is no manual curation. It's fully automated by a bot.
                 </p>
                 <ul className="list-disc list-inside ml-4 space-y-2 font-mono text-sm">
-                  <li><strong>The Scanner:</strong> A script constantly crawls Hacker News scanning for trigger phrases like <span className="bg-gray-200 px-1 border border-gray-400">"apology"</span>, <span className="bg-gray-200 px-1 border border-gray-400">"we messed up"</span>, and <span className="bg-gray-200 px-1 border border-gray-400">"post-mortem"</span>.</li>
-                  <li><strong>The Outrage Score:</strong> We measure the public backlash. The algorithm calculates standard deviations of comment volume to build a "Volatile Score." Bigger outcry = higher rank.</li>
+                  <li><strong>The Scanner:</strong> A script constantly crawls platforms scanning for trigger phrases like <span className="bg-gray-200 px-1 border border-gray-400">"apology"</span>, <span className="bg-gray-200 px-1 border border-gray-400">"we messed up"</span>, and <span className="bg-gray-200 px-1 border border-gray-400">"post-mortem"</span>.</li>
+                  <li><strong>The Indexer:</strong> We calculate the <strong>Volatile Score</strong>, cross-relate it with comment volume, and generate an immutable record.</li>
                   <li><strong>The Filter:</strong> We ignore boring product updates. We only log failures big enough to force a founder to publicly apologize.</li>
                 </ul>
               </td>
@@ -76,7 +118,7 @@ export default function About() {
           <tbody>
             <tr>
               <td className="bg-[#e0e0e0] p-2 border-2 border-outset border-gray-400 font-mono text-sm font-bold">
-                <h2>[ 4. WHO BUILT THIS? ]</h2>
+                <h2>[ 5. WHO BUILT THIS? ]</h2>
               </td>
             </tr>
             <tr>

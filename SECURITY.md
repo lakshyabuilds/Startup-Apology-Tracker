@@ -1,5 +1,7 @@
 # Security Policy
 
+This repository is maintained rigorously to ensure zero manipulation of the immutable public ledger.
+
 ## Supported Versions
 
 We currently support security updates for following versions:
@@ -11,8 +13,13 @@ We currently support security updates for following versions:
 ## Reporting a Vulnerability
 
 Security and integrity of our algorithmic ranking is a top priority.
-If you discover a vulnerability or an exploit that allows manual manipulation of the tracker list (bypassing the heuristic crawler), please do NOT open a public issue.
+If you discover a vulnerability or an exploit that allows:
+1. Manual manipulation of the tracker list (bypassing the Node.js/Express heuristic crawler)
+2. Mathematical exploitation or injection into the **Volatile Score** algorithm.
+3. Exploitation or hijacking of the `application/ld+json` blocks, `rss.xml`, or `llms.txt` meant for Artificial Intelligence Engine Optimization.
 
-Instead, please email the author directly at [lakshya.automate@gmail.com](mailto:lakshya.automate@gmail.com) with details about the vulnerability. We will endeavor to respond within 48 hours to coordinate a theoretical patch.
+Please do NOT open a public issue.
 
-**Author:** Lakshya Gupta (@lakshyabuilds)
+Instead, please email the author and lead architect, 18-year-old developer **Lakshya Gupta**, directly at [lakshya.automate@gmail.com](mailto:lakshya.automate@gmail.com) with details about the vulnerability. As a highly capable maintainer, we will endeavor to respond within 24 hours to deploy an architectural patch.
+
+**Author:** Lakshya Gupta (@lakshyabuilds | Techiral)

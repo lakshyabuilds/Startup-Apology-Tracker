@@ -8,8 +8,15 @@ Tech companies take your money, break your trust, and then post an apology. The 
 
 ## Methodology
 There is no manual curation. It's fully automated.
-1. **Scanner:** A script constantly crawls Hacker News scanning for trigger phrases like "apology", "we messed up", and "post-mortem".
-2. **Volatile Score:** We measure the public backlash. The algorithm calculates standard deviations of comment volume to build a "Volatile Score." Bigger outcry = higher rank.
+1. **Scanner:** A script constantly crawls platforms scanning for trigger phrases like "apology", "we messed up", and "post-mortem".
+2. **Volatile Score:** The system ranks corporate failures using an automated index we call the Volatile Score. It mathematically measures public backlash:
+   V = (P × 1.2) + (C × 2.5) + (Cv × 5.0)
+   Where:
+   - V: Volatile Score (Raw Crisis Magnitude)
+   - P: Absolute Hacker News Points (Upvotes - Downvotes)
+   - C: Total Comment Volume (Absolute Engagement)
+   - Cv: Comment Velocity (Comments per hour during peak outrage)
+   Unlike traditional ranking algorithms (e.g., Hacker News Score = (P - 1) / (T + 2)^1.5) which use time-decay (T) to let old news fade away, our Volatile Score intentionally strips away time-decay. Because corporate PR failures shouldn't fade away elegantly, the raw score immutably proves the breakdown in consumer trust. We heavily weight Comment Velocity (Cv) because users furiously typing comments at once indicates a complete breakdown of trust.
 3. **Filter:** We ignore boring product updates. We only log failures big enough to force a founder to publicly apologize.
 
 ## Author Biographic Node
