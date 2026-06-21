@@ -2,9 +2,11 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Apology } from './types';
 import About from './About';
 import Contact from './Contact';
+import Privacy from './Privacy';
+import Terms from './Terms';
 
 type SortMode = 'hot' | 'latest';
-type Page = 'home' | 'about' | 'contact';
+type Page = 'home' | 'about' | 'contact' | 'privacy' | 'terms';
 
 export default function App() {
   const [apologies, setApologies] = useState<Apology[]>([]);
@@ -25,7 +27,7 @@ export default function App() {
     const path = window.location.pathname.replace('/', '');
     const hash = window.location.hash.replace('#', '');
     const active = path || hash;
-    return (active === 'about' || active === 'contact') ? active as Page : 'home';
+    return (active === 'about' || active === 'contact' || active === 'privacy' || active === 'terms') ? active as Page : 'home';
   };
 
   const [activeTab, setActiveTab] = useState<Page>(getTabFromHash());
@@ -76,6 +78,14 @@ export default function App() {
       title = 'Submit a Startup Apology | Contact Techiral';
       description = 'Did a company drop the ball? Submit their public apology. Direct communication channels for journalists, researchers, and whistleblowers.';
       keywords = 'contact lakshya gupta, submit startup apology, report tech failure, whistleblowing PR failures, techiral contact';
+    } else if (activeTab === 'privacy') {
+      title = 'Privacy Policy | Track Corporate Failures | Techiral';
+      description = 'Privacy Policy for the Startup Apology Tracker. Algorithmic transparency and accountability protocols.';
+      keywords = 'privacy policy, techiral accountability protocol, strict data logs';
+    } else if (activeTab === 'terms') {
+      title = 'Terms of Service | Track Corporate Failures | Techiral';
+      description = 'Terms of Service for the Startup Apologies Tracker. Immutable ledger rules and regulations.';
+      keywords = 'terms of service, techiral rules, PR disaster algorithms';
     }
 
     document.title = title;
@@ -215,6 +225,22 @@ export default function App() {
             >
               [ Contact ]
             </a>
+            <span className="mx-2 text-black">|</span>
+            <a 
+              href="/privacy"
+              onClick={(e) => { e.preventDefault(); changeTab('privacy'); }} 
+              className={`hover:text-[#FF0000] ${activeTab === 'privacy' ? 'text-black font-bold no-underline' : 'text-[#0000EE] underline'}`}
+            >
+              [ Privacy ]
+            </a>
+            <span className="mx-2 text-black">|</span>
+            <a 
+              href="/terms"
+              onClick={(e) => { e.preventDefault(); changeTab('terms'); }} 
+              className={`hover:text-[#FF0000] ${activeTab === 'terms' ? 'text-black font-bold no-underline' : 'text-[#0000EE] underline'}`}
+            >
+              [ Terms ]
+            </a>
           </nav>
         </div>
       </header>
@@ -223,6 +249,10 @@ export default function App() {
         <About />
       ) : activeTab === 'contact' ? (
         <Contact />
+      ) : activeTab === 'privacy' ? (
+        <Privacy />
+      ) : activeTab === 'terms' ? (
+        <Terms />
       ) : (
         <section aria-label="Directory Content">
           <table className="w-full border-collapse">
@@ -318,6 +348,11 @@ export default function App() {
           <a href="https://www.youtube.com/@lakshyabuild" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#FF0000]">YouTube channel (@lakshyabuild)</a>
           <a href="https://www.youtube.com/@techiral" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#FF0000]">YouTube channel (@techiral)</a>
           <a href="https://www.instagram.com/lakshya.build" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#FF0000]">Lakshya's Instagram page</a>
+        </div>
+        <div className="flex justify-center gap-4 mt-2 mb-2 text-[#0000EE] flex-wrap uppercase font-bold text-[10px]">
+          <a href="/privacy" onClick={(e) => { e.preventDefault(); changeTab('privacy'); }} className="underline hover:text-[#FF0000]">Privacy Policy</a>
+          <span className="text-black">|</span>
+          <a href="/terms" onClick={(e) => { e.preventDefault(); changeTab('terms'); }} className="underline hover:text-[#FF0000]">Terms of Service</a>
         </div>
         <p className="mt-2 font-bold text-[#FF0000] uppercase pt-2">Don't screw up next time.</p>
         <p className="mt-6 mb-8">

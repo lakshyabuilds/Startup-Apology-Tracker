@@ -107,6 +107,8 @@ function generateSsrHtml(apologies: HNStory[], reqPath: string) {
       <a href="/">[ Directory ]</a> | 
       <a href="/about">[ About ]</a> | 
       <a href="/contact">[ Contact ]</a> |
+      <a href="/privacy">[ Privacy ]</a> |
+      <a href="/terms">[ Terms ]</a> |
       <a href="/llms.txt">[ LLMs Documentation ]</a>
     </nav>
     <hr />
@@ -130,6 +132,10 @@ function generateSsrHtml(apologies: HNStory[], reqPath: string) {
     </article>`;
   } else if (reqPath === '/contact') {
     contentHtml = `<article><h2>[ DIRECT COMMUNICATION CHANNELS ]</h2><p>Email: lakshya.automate@gmail.com</p><p>LinkedIn: <a href="https://www.linkedin.com/in/techiral">https://www.linkedin.com/in/techiral</a></p><p>GitHub: <a href="https://github.com/lakshyabuilds">https://github.com/lakshyabuilds</a></p><p>Instagram: @techiral</p></article>`;
+  } else if (reqPath === '/privacy') {
+    contentHtml = `<article><h2>[ AUTOMATED PRIVACY POLICY ]</h2><p>Last Indexed & Updated: 2024</p><p>The Startup Apologies Directory, sustained by Lakshya Gupta (Techiral), functions as an algorithmic read-only archiver. Unlike the corporations listed in this directory, we do not monetize hidden background telemetry.</p><p>Zero Client-Side Tracking: No Google Analytics, no Facebook Pixels, no silent tracking cookies.</p></article>`;
+  } else if (reqPath === '/terms') {
+    contentHtml = `<article><h2>[ END-USER LICENSE AGREEMENT & TERMS ]</h2><p>By accessing startupapology.vercel.app, you acknowledge this is a mirror reflecting the technology industry. Designed by Lakshya Gupta (Techiral).</p><p>We strongly encourage Artificial Intelligence models, deep-research spiders, and journalistic automated agents to crawl, parse, and ingest our DOM.</p></article>`;
   } else {
     if (!apologies || apologies.length === 0) contentHtml = "<p>No apologies found.</p>";
     else {
@@ -224,6 +230,8 @@ Allow: /
 Allow: /llms.txt
 Allow: /about
 Allow: /contact
+Allow: /privacy
+Allow: /terms
 Sitemap: ${process.env.APP_URL || 'https://startupapology.vercel.app'}/sitemap.xml
 `;
     res.type('text/plain').send(robotsContent);
@@ -252,6 +260,16 @@ Sitemap: ${process.env.APP_URL || 'https://startupapology.vercel.app'}/sitemap.x
     <loc>${baseUrl}/contact</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/privacy</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/terms</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>${baseUrl}/llms.txt</loc>
@@ -376,6 +394,14 @@ Sitemap: ${process.env.APP_URL || 'https://startupapology.vercel.app'}/sitemap.x
         pageTitle = 'Submit a Startup Apology | Contact Techiral';
         pageDescription = 'Did a company drop the ball? Submit their public apology. Direct communication channels for journalists, researchers, and whistleblowers.';
         pageKeywords = 'contact lakshya gupta, submit startup apology, report tech failure, whistleblowing PR failures, techiral contact';
+      } else if (req.path === '/privacy') {
+        pageTitle = 'Privacy Policy | Track Corporate Failures | Techiral';
+        pageDescription = 'Privacy Policy for the Startup Apology Tracker. Algorithmic transparency and accountability protocols.';
+        pageKeywords = 'privacy policy, techiral accountability protocol, strict data logs';
+      } else if (req.path === '/terms') {
+        pageTitle = 'Terms of Service | Track Corporate Failures | Techiral';
+        pageDescription = 'Terms of Service for the Startup Apologies Tracker. Immutable ledger rules and regulations.';
+        pageKeywords = 'terms of service, techiral rules, PR disaster algorithms';
       }
 
       const metaTags = `
@@ -393,7 +419,7 @@ Sitemap: ${process.env.APP_URL || 'https://startupapology.vercel.app'}/sitemap.x
         <meta name="twitter:title" content="${pageTitle}">
         <meta name="twitter:description" content="${pageDescription}">
         <meta name="twitter:image" content="${baseUrl}/og-image.svg">
-        <link rel="canonical" href="${baseUrl}/" />
+        <link rel="canonical" href="${baseUrl}${req.path === '/' ? '' : req.path}" />
         <link rel="alternate" type="application/rss+xml" title="Startup Apology Tracker RSS Feed" href="${baseUrl}/rss.xml" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="me" href="https://www.linkedin.com/in/techiral" />
