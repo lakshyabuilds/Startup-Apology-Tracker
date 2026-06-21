@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Times New Roman", Times, serif;
+  --font-sans: Arial, Helvetica, sans-serif;
   --font-serif: "Times New Roman", Times, serif;
   --font-mono: "Courier New", Courier, monospace;
 }
@@ -9,8 +9,25 @@
 body {
   background-color: #ffffff;
   color: #000000;
-  margin: 0;
-  padding: 0;
+  margin: 8px;
+  font-family: "Times New Roman", Times, serif;
+}
+
+a {
+  color: #0000ee;
+  text-decoration: underline;
+}
+
+a:visited {
+  color: #551a8b;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+a:active {
+  color: #ff0000;
 }
 
 .blink {

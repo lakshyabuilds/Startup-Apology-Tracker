@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Allow: /llms.txt
+Allow: /about
+Allow: /contact
+Allow: /privacy
+Allow: /terms
+Allow: /thesis
+Allow: /architecture
+Sitemap: https://startupapology.vercel.app/sitemap.xml

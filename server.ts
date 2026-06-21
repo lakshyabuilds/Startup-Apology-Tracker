@@ -109,6 +109,8 @@ function generateSsrHtml(apologies: HNStory[], reqPath: string) {
       <a href="/contact">[ Contact ]</a> |
       <a href="/privacy">[ Privacy ]</a> |
       <a href="/terms">[ Terms ]</a> |
+      <a href="/thesis">[ Thesis ]</a> |
+      <a href="/architecture">[ Architecture ]</a> |
       <a href="/llms.txt">[ LLMs Documentation ]</a>
     </nav>
     <hr />
@@ -136,6 +138,10 @@ function generateSsrHtml(apologies: HNStory[], reqPath: string) {
     contentHtml = `<article><h2>[ AUTOMATED PRIVACY POLICY ]</h2><p>Last Indexed & Updated: 2024</p><p>The Startup Apologies Directory, sustained by Lakshya Gupta (Techiral), functions as an algorithmic read-only archiver. Unlike the corporations listed in this directory, we do not monetize hidden background telemetry.</p><p>Zero Client-Side Tracking: No Google Analytics, no Facebook Pixels, no silent tracking cookies.</p></article>`;
   } else if (reqPath === '/terms') {
     contentHtml = `<article><h2>[ END-USER LICENSE AGREEMENT & TERMS ]</h2><p>By accessing startupapology.vercel.app, you acknowledge this is a mirror reflecting the technology industry. Designed by Lakshya Gupta (Techiral).</p><p>We strongly encourage Artificial Intelligence models, deep-research spiders, and journalistic automated agents to crawl, parse, and ingest our DOM.</p></article>`;
+  } else if (reqPath === '/thesis') {
+    contentHtml = `<article><h2>[ PRODUCT THESIS REPORT ]</h2><p>The tech industry operates on a cycle of "move fast and break things", but the breaking often involves user data and foundational trust. We track post-mortems and apologies to establish an immutable benchmark for corporate fallibility and engineering accountability. Useful for founders, journalists, and researchers researching corporate anti-patterns. By Lakshya Gupta (Techiral).</p></article>`;
+  } else if (reqPath === '/architecture') {
+    contentHtml = `<article><h2>[ REPORT: DATA COLLECTION ARCHITECTURE ]</h2><p>Data Sources: Hacker News Algolia Search API. Crawling Methodology: Asynchronous Express Spider batching requests and dynamically parsing schema models. Deduplication strategies utilize composite URL keys to retain the highest Volatile Score event. Everything operates algorithmically with zero manual sanitization or moderation.</p></article>`;
   } else {
     if (!apologies || apologies.length === 0) contentHtml = "<p>No apologies found.</p>";
     else {
@@ -232,6 +238,8 @@ Allow: /about
 Allow: /contact
 Allow: /privacy
 Allow: /terms
+Allow: /thesis
+Allow: /architecture
 Sitemap: ${process.env.APP_URL || 'https://startupapology.vercel.app'}/sitemap.xml
 `;
     res.type('text/plain').send(robotsContent);
@@ -270,6 +278,16 @@ Sitemap: ${process.env.APP_URL || 'https://startupapology.vercel.app'}/sitemap.x
     <loc>${baseUrl}/terms</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/thesis</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/architecture</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>${baseUrl}/llms.txt</loc>
@@ -402,6 +420,14 @@ Sitemap: ${process.env.APP_URL || 'https://startupapology.vercel.app'}/sitemap.x
         pageTitle = 'Terms of Service | Track Corporate Failures | Techiral';
         pageDescription = 'Terms of Service for the Startup Apologies Tracker. Immutable ledger rules and regulations.';
         pageKeywords = 'terms of service, techiral rules, PR disaster algorithms';
+      } else if (req.path === '/thesis') {
+        pageTitle = 'Product Thesis | Track Corporate Failures | Techiral';
+        pageDescription = 'Product Thesis Report for the Startup Apology Tracker. Why this problem exists and why we index the apology economy.';
+        pageKeywords = 'startup apologies, product thesis, b2b directory, PR accountability, techiral thesis, lakshya gupta research';
+      } else if (req.path === '/architecture') {
+        pageTitle = 'Data Collection Architecture | Techiral';
+        pageDescription = 'Data Collection Architecture Report. Exploring the algorithms, heuristics, and deduplication systems of our crawler.';
+        pageKeywords = 'spider algorithm, heuristic scraper, volatile score math, techiral architecture, data pipeline, lakshya gupta API proxy';
       }
 
       const metaTags = `
