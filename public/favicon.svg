@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2005/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" fill="white"/>
+  <rect x="5" y="5" width="90" height="90" fill="none" stroke="black" stroke-width="4"/>
+  <rect x="10" y="10" width="80" height="80" fill="none" stroke="black" stroke-width="2"/>
+  <text x="50" y="70" font-family="'Times New Roman', serif" font-size="65" font-weight="bold" fill="#ff0000" text-anchor="middle">!</text>
+  <text x="50" y="90" font-family="monospace" font-size="8" font-weight="bold" fill="black" text-anchor="middle">T R A C K E R</text>
+</svg>

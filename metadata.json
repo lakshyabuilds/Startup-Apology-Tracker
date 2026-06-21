@@ -1,0 +1,6 @@
+{
+  "name": "Startup Apology Tracker",
+  "description": "A real-time tracker of public apologies from startups and founders, indexed efficiently from Hacker News discussions.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

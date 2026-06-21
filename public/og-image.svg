@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2005/svg" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="white"/>
+  <rect x="20" y="20" width="1160" height="590" fill="none" stroke="black" stroke-width="10"/>
+  <rect x="35" y="35" width="1130" height="560" fill="none" stroke="black" stroke-width="4"/>
+  <text x="600" y="320" font-family="'Times New Roman', serif" font-size="120" font-weight="bold" fill="black" text-anchor="middle">Startup Apology Tracker</text>
+  <text x="600" y="420" font-family="monospace" font-size="30" font-weight="bold" fill="#ff0000" text-anchor="middle">THEY MESSED UP. NOW THEY'RE SORRY.</text>
+  <text x="600" y="550" font-family="'Times New Roman', serif" font-size="25" fill="black" text-anchor="middle">Developed by Lakshya Gupta (Techiral)</text>
+</svg>
