@@ -101,7 +101,14 @@ async function getApologies() {
 }
 
 // Generate minimal HTML version for crawlers/AEO
-function generateSsrHtml(apologies: HNStory[]) {
+function generateSsrHtml(apologies: HNStory[], reqPath: string) {
+  if (reqPath === '/about') {
+    return `<article><h2>[ 1. WHAT IS THIS? ]</h2><p>Tech companies take your money. They break your trust. Then they post an apology.</p><p>This directory stops the amnesia. It’s an immutable public ledger.</p></article>`;
+  }
+  if (reqPath === '/contact') {
+    return `<article><h2>[ DIRECT COMMUNICATION CHANNELS ]</h2><p>Email: lakshya.automate@gmail.com</p><p>LinkedIn: https://www.linkedin.com/in/techiral</p><p>Instagram: @techiral</p></article>`;
+  }
+
   if (!apologies || apologies.length === 0) return "<p>No apologies found.</p>";
   
   let html = `<ul style="list-style-type: none; padding: 0;">`;
@@ -190,8 +197,8 @@ async function startServer() {
     const robotsContent = `User-agent: *
 Allow: /
 Allow: /llms.txt
-Allow: /#about
-Allow: /#contact
+Allow: /about
+Allow: /contact
 Sitemap: ${process.env.APP_URL || 'https://startupapology.vercel.app'}/sitemap.xml
 `;
     res.type('text/plain').send(robotsContent);
@@ -212,12 +219,12 @@ Sitemap: ${process.env.APP_URL || 'https://startupapology.vercel.app'}/sitemap.x
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>${baseUrl}/#about</loc>
+    <loc>${baseUrl}/about</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>${baseUrl}/#contact</loc>
+    <loc>${baseUrl}/contact</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -229,16 +236,17 @@ Sitemap: ${process.env.APP_URL || 'https://startupapology.vercel.app'}/sitemap.x
 `;
 
     // Add individual items as news
+    const escapeXml = (unsafe: string) => unsafe.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
     for (const item of data.slice(0, 50)) {
       xml += `  <url>
-    <loc>${item.url}</loc>
+    <loc>${escapeXml(item.url || '')}</loc>
     <news:news>
       <news:publication>
         <news:name>Startup Apology Tracker</news:name>
         <news:language>en</news:language>
       </news:publication>
       <news:publication_date>${new Date(item.createdAt).toISOString()}</news:publication_date>
-      <news:title>${item.title.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;')}</news:title>
+      <news:title>${escapeXml(item.title)}</news:title>
     </news:news>
   </url>
 `;
@@ -262,13 +270,14 @@ Sitemap: ${process.env.APP_URL || 'https://startupapology.vercel.app'}/sitemap.x
   <atom:link href="${baseUrl}/rss.xml" rel="self" type="application/rss+xml" />
 `;
 
+    const escapeXml = (unsafe: string) => unsafe.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
     for (const item of data.slice(0, 50)) {
       rss += `  <item>
-    <title>${item.title.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;')}</title>
-    <link>${item.url}</link>
+    <title>${escapeXml(item.title)}</title>
+    <link>${escapeXml(item.url || '')}</link>
     <guid isPermaLink="false">${item.id}</guid>
     <pubDate>${new Date(item.createdAt).toUTCString()}</pubDate>
-    <description>Public apology by ${item.author.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}. Tracked incident with ${item.numComments} reactions.</description>
+    <description>Public apology by ${escapeXml(item.author || 'Unknown')}. Tracked incident with ${item.numComments} reactions.</description>
   </item>
 `;
     }
@@ -312,7 +321,7 @@ Sitemap: ${process.env.APP_URL || 'https://startupapology.vercel.app'}/sitemap.x
       const scriptInjection = `<script>window.__INITIAL_DATA__ = ${escapeJsonString(JSON.stringify(data))};</script>`;
       
       // Inject HTML for crawlers/AEO
-      const crawlerHtml = generateSsrHtml(data);
+      const crawlerHtml = generateSsrHtml(data, req.path);
       const structuredDataHtml = generateStructuredData(data);
       
       const recentTitles = data.slice(0, 3).map(d => d.title.replace(/"/g, '&quot;')).join(" | ");
@@ -324,20 +333,34 @@ Sitemap: ${process.env.APP_URL || 'https://startupapology.vercel.app'}/sitemap.x
 
       const baseUrl = process.env.APP_URL || 'https://startupapology.vercel.app';
 
+      let pageTitle = 'Startup Apologies Directory | Track Corporate Failures | Techiral';
+      let pageDescription = `Founders take your money, they mess up, then they apologize. We index their failures in real-time so they cannot be forgotten. By Lakshya Gupta (Techiral). Features: ${recentTitles.substring(0, 100)}...`;
+      let pageKeywords = `startup apologies, post-mortems, tech corporate failures, vc fund failures, lakshya gupta, techiral, accountability tracker, ${dynamicKeywords}`;
+
+      if (req.path === '/about') {
+        pageTitle = 'Why We Track Startup Apologies | The Abstract | Lakshya Gupta';
+        pageDescription = 'They break things, write a PR apology, and expect you to forget. The Startup Apology Directory is an immutable ledger to hold them accountable.';
+        pageKeywords = 'startup accountability, tracker methodology, techiral lakshya gupta bio, why we index apologies, corporate pr failures';
+      } else if (req.path === '/contact') {
+        pageTitle = 'Submit a Startup Apology | Contact Techiral';
+        pageDescription = 'Did a company drop the ball? Submit their public apology. Direct communication channels for journalists, researchers, and whistleblowers.';
+        pageKeywords = 'contact lakshya gupta, submit startup apology, report tech failure, whistleblowing PR failures, techiral contact';
+      }
+
       const metaTags = `
-        <title>Startup Apology Directory | Track Corporate Failures</title>
-        <meta name="description" content="Founders take your money, they mess up, then they apologize. We index their failures in real-time so they cannot be forgotten. By Lakshya Gupta (Techiral). Features: ${recentTitles.substring(0, 100)}...">
-        <meta name="keywords" content="startup apology, founder apology, ceo apology, post-mortem, tech corporate failures, tracker, Lakshya Gupta, Techiral, ${dynamicKeywords}">
+        <title>${pageTitle}</title>
+        <meta name="description" content="${pageDescription}">
+        <meta name="keywords" content="${pageKeywords}">
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
         <meta name="author" content="Lakshya Gupta (Techiral)">
         <meta property="og:site_name" content="Startup Apology Tracker">
         <meta property="og:type" content="website">
-        <meta property="og:title" content="Startup Apologies Directory | Track Corporate Failures">
-        <meta property="og:description" content="Founders take your money, they mess up, then they apologize. We index their failures in real-time so they cannot be forgotten. By Lakshya Gupta (Techiral).">
+        <meta property="og:title" content="${pageTitle}">
+        <meta property="og:description" content="${pageDescription}">
         <meta property="og:image" content="${baseUrl}/og-image.svg">
         <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="Startup Apologies Directory | Track Corporate Failures">
-        <meta name="twitter:description" content="Founders take your money, they mess up, then they apologize. We index their failures in real-time so they cannot be forgotten. By Lakshya Gupta (Techiral).">
+        <meta name="twitter:title" content="${pageTitle}">
+        <meta name="twitter:description" content="${pageDescription}">
         <meta name="twitter:image" content="${baseUrl}/og-image.svg">
         <link rel="canonical" href="${baseUrl}/" />
         <link rel="alternate" type="application/rss+xml" title="Startup Apology Tracker RSS Feed" href="${baseUrl}/rss.xml" />

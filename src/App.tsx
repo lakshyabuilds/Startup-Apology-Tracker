@@ -10,10 +10,22 @@ export default function App() {
   const [apologies, setApologies] = useState<Apology[]>([]);
   const [loading, setLoading] = useState(true);
   const [sortMode, setSortMode] = useState<SortMode>('hot');
-  const [currentPage, setCurrentPage] = useState(1);
+  const getInitialPage = () => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const p = parseInt(params.get('page') || '1', 10);
+      return isNaN(p) ? 1 : p;
+    }
+    return 1;
+  };
+
+  const [currentPage, setCurrentPage] = useState(getInitialPage());
   const getTabFromHash = (): Page => {
+    if (typeof window === 'undefined') return 'home';
+    const path = window.location.pathname.replace('/', '');
     const hash = window.location.hash.replace('#', '');
-    return (hash === 'about' || hash === 'contact') ? hash as Page : 'home';
+    const active = path || hash;
+    return (active === 'about' || active === 'contact') ? active as Page : 'home';
   };
 
   const [activeTab, setActiveTab] = useState<Page>(getTabFromHash());
@@ -24,14 +36,30 @@ export default function App() {
     const onHashChange = () => {
       setActiveTab(getTabFromHash());
     };
+    const onPopState = () => {
+      setCurrentPage(getInitialPage());
+      setActiveTab(getTabFromHash());
+    };
     window.addEventListener('hashchange', onHashChange);
-    return () => window.removeEventListener('hashchange', onHashChange);
+    window.addEventListener('popstate', onPopState);
+    return () => {
+      window.removeEventListener('hashchange', onHashChange);
+      window.removeEventListener('popstate', onPopState);
+    };
   }, []);
 
-  // Update hash when tab changes
+  // Update location when tab changes
   const changeTab = (tab: Page) => {
-    window.location.hash = tab === 'home' ? '' : tab;
+    const newPath = tab === 'home' ? '/' : `/${tab}`;
+    window.history.pushState({}, '', newPath);
     setActiveTab(tab);
+  };
+
+  const changePage = (p: number) => {
+    setCurrentPage(p);
+    const url = new URL(window.location.href);
+    url.searchParams.set('page', p.toString());
+    window.history.pushState({}, '', url.toString());
   };
 
   // SEO Update Effect
@@ -82,8 +110,13 @@ export default function App() {
   }, [activeTab]);
 
   // Reset page when sorting changes
+  const isFirstMount = React.useRef(true);
   useEffect(() => {
-    setCurrentPage(1);
+    if (isFirstMount.current) {
+      isFirstMount.current = false;
+      return;
+    }
+    changePage(1);
   }, [sortMode]);
 
   useEffect(() => {
@@ -127,17 +160,17 @@ export default function App() {
       </div>
       <div>
         {currentPage > 1 ? (
-          <button onClick={() => setCurrentPage(p => p - 1)} className="text-[#0000EE] hover:text-[#FF0000] underline">
+          <a href={`?page=${currentPage - 1}`} onClick={(e) => { e.preventDefault(); changePage(currentPage - 1); }} className="text-[#0000EE] hover:text-[#FF0000] underline">
             [ &lt;&lt; Previous Page ]
-          </button>
+          </a>
         ) : (
           <span className="text-gray-500">[ &lt;&lt; Previous Page ]</span>
         )}
         <span className="mx-2">|</span>
         {currentPage < totalPages ? (
-          <button onClick={() => setCurrentPage(p => p + 1)} className="text-[#0000EE] hover:text-[#FF0000] underline">
+          <a href={`?page=${currentPage + 1}`} onClick={(e) => { e.preventDefault(); changePage(currentPage + 1); }} className="text-[#0000EE] hover:text-[#FF0000] underline">
             [ Next Page &gt;&gt; ]
-          </button>
+          </a>
         ) : (
           <span className="text-gray-500">[ Next Page &gt;&gt; ]</span>
         )}
@@ -159,26 +192,29 @@ export default function App() {
             [ INDEXED IN REAL-TIME ]
           </div>
           <nav className="font-mono text-sm mt-2 mb-2" aria-label="Primary Navigation">
-            <button 
-              onClick={() => changeTab('home')} 
+            <a 
+              href="/"
+              onClick={(e) => { e.preventDefault(); changeTab('home'); }} 
               className={`hover:text-[#FF0000] ${activeTab === 'home' ? 'text-black font-bold no-underline' : 'text-[#0000EE] underline'}`}
             >
               [ Directory ]
-            </button>
+            </a>
             <span className="mx-2 text-black">|</span>
-            <button 
-              onClick={() => changeTab('about')} 
+            <a 
+              href="/about"
+              onClick={(e) => { e.preventDefault(); changeTab('about'); }} 
               className={`hover:text-[#FF0000] ${activeTab === 'about' ? 'text-black font-bold no-underline' : 'text-[#0000EE] underline'}`}
             >
               [ About ]
-            </button>
+            </a>
             <span className="mx-2 text-black">|</span>
-            <button 
-              onClick={() => changeTab('contact')} 
+            <a 
+              href="/contact"
+              onClick={(e) => { e.preventDefault(); changeTab('contact'); }} 
               className={`hover:text-[#FF0000] ${activeTab === 'contact' ? 'text-black font-bold no-underline' : 'text-[#0000EE] underline'}`}
             >
               [ Contact ]
-            </button>
+            </a>
           </nav>
         </div>
       </header>
