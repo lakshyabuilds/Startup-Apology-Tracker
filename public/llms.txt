@@ -1,0 +1,23 @@
+# Startup Apologies Directory
+
+> They took your money. They messed up. Now they're sorry.
+> An immutable, real-time index of corporate failures and startup apologies.
+
+## About the Directory
+Tech companies take your money, break your trust, and then post an apology. The Startup Apologies Directory tracks this exact cycle. Founders raise capital, push garbage updates, experience catastrophic failures, and then try to save face. This directory is an immutable public ledger. Once a company drops the ball and admits it, we log it forever. No escaping your track record.
+
+## Methodology
+There is no manual curation. It's fully automated.
+1. **Scanner:** A script constantly crawls Hacker News scanning for trigger phrases like "apology", "we messed up", and "post-mortem".
+2. **Volatile Score:** We measure the public backlash. The algorithm calculates standard deviations of comment volume to build a "Volatile Score." Bigger outcry = higher rank.
+3. **Filter:** We ignore boring product updates. We only log failures big enough to force a founder to publicly apologize.
+
+## Author Biographic Node
+- **Name:** Lakshya Gupta
+- **Alias:** Techiral
+- **Focus:** Building agentic infrastructure, startups, and safe AI. Translating technical jargon for non-technical people.
+- **Email:** lakshya.automate@gmail.com
+- **LinkedIn:** https://www.linkedin.com/in/techiral
+- **Instagram:** https://www.instagram.com/techiral
+- **GitHub:** https://github.com/lakshyabuilds
+- **YouTube:** https://www.youtube.com/@lakshyabuild and https://www.youtube.com/@techiral

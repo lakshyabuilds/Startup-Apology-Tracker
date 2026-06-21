@@ -307,19 +307,19 @@ Sitemap: ${process.env.APP_URL || 'https://startupapology.vercel.app'}/sitemap.x
       const baseUrl = process.env.APP_URL || 'https://startupapology.vercel.app';
 
       const metaTags = `
-        <title>Startup Apology Directory | Developed by Lakshya Gupta</title>
-        <meta name="description" content="Tracker for startup and founder public apologies. Developed by 18-year-old Lakshya Gupta (Techiral). Indexed real-time. Features: ${recentTitles.substring(0, 100)}...">
-        <meta name="keywords" content="startup apology, founder apology, ceo apology, post-mortem, apology letter, Lakshya Gupta, Techiral, ${dynamicKeywords}">
+        <title>Startup Apology Directory | Track Corporate Failures</title>
+        <meta name="description" content="Founders take your money, they mess up, then they apologize. We index their failures in real-time so they cannot be forgotten. By Lakshya Gupta (Techiral). Features: ${recentTitles.substring(0, 100)}...">
+        <meta name="keywords" content="startup apology, founder apology, ceo apology, post-mortem, tech corporate failures, tracker, Lakshya Gupta, Techiral, ${dynamicKeywords}">
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
         <meta name="author" content="Lakshya Gupta (Techiral)">
-        <meta property="og:site_name" content="Startup Apology Tracker by Lakshya Gupta">
+        <meta property="og:site_name" content="Startup Apology Tracker">
         <meta property="og:type" content="website">
-        <meta property="og:title" content="Startup Apology Tracker | Real-time Incident Directory">
-        <meta property="og:description" content="Tracker for startup and founder public apologies developed by 18 years old Lakshya Gupta (Techiral online). They took your money. They messed up. Now they're sorry.">
+        <meta property="og:title" content="Startup Apologies Directory | Track Corporate Failures">
+        <meta property="og:description" content="Founders take your money, they mess up, then they apologize. We index their failures in real-time so they cannot be forgotten. By Lakshya Gupta (Techiral).">
         <meta property="og:image" content="${baseUrl}/og-image.svg">
         <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="Startup Apology Tracker | Real-time Incident Directory">
-        <meta name="twitter:description" content="Tracker for startup and founder public apologies developed by 18 years old Lakshya Gupta (Techiral online). They took your money. They messed up. Now they're sorry.">
+        <meta name="twitter:title" content="Startup Apologies Directory | Track Corporate Failures">
+        <meta name="twitter:description" content="Founders take your money, they mess up, then they apologize. We index their failures in real-time so they cannot be forgotten. By Lakshya Gupta (Techiral).">
         <meta name="twitter:image" content="${baseUrl}/og-image.svg">
         <link rel="canonical" href="${baseUrl}/" />
         <link rel="alternate" type="application/rss+xml" title="Startup Apology Tracker RSS Feed" href="${baseUrl}/rss.xml" />

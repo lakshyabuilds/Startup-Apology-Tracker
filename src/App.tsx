@@ -1,14 +1,85 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Apology } from './types';
+import About from './About';
+import Contact from './Contact';
 
 type SortMode = 'hot' | 'latest';
+type Page = 'home' | 'about' | 'contact';
 
 export default function App() {
   const [apologies, setApologies] = useState<Apology[]>([]);
   const [loading, setLoading] = useState(true);
   const [sortMode, setSortMode] = useState<SortMode>('hot');
   const [currentPage, setCurrentPage] = useState(1);
+  const getTabFromHash = (): Page => {
+    const hash = window.location.hash.replace('#', '');
+    return (hash === 'about' || hash === 'contact') ? hash as Page : 'home';
+  };
+
+  const [activeTab, setActiveTab] = useState<Page>(getTabFromHash());
   const itemsPerPage = 25;
+
+  // Sync state with hash changes
+  useEffect(() => {
+    const onHashChange = () => {
+      setActiveTab(getTabFromHash());
+    };
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
+  }, []);
+
+  // Update hash when tab changes
+  const changeTab = (tab: Page) => {
+    window.location.hash = tab === 'home' ? '' : tab;
+    setActiveTab(tab);
+  };
+
+  // SEO Update Effect
+  useEffect(() => {
+    let title = 'Startup Apologies Directory | Track Corporate Failures | Techiral';
+    let description = 'Founders take your money, they mess up, then they apologize. We index their failures in real-time so they cannot be forgotten. By Lakshya Gupta (Techiral).';
+    let keywords = 'startup apologies, post-mortems, tech corporate failures, vc fund failures, lakshya gupta, techiral, accountability tracker';
+
+    if (activeTab === 'about') {
+      title = 'Why We Track Startup Apologies | The Abstract | Lakshya Gupta';
+      description = 'They break things, write a PR apology, and expect you to forget. The Startup Apology Directory is an immutable ledger to hold them accountable.';
+      keywords = 'startup accountability, tracker methodology, techiral lakshya gupta bio, why we index apologies, corporate pr failures';
+    } else if (activeTab === 'contact') {
+      title = 'Submit a Startup Apology | Contact Techiral';
+      description = 'Did a company drop the ball? Submit their public apology. Direct communication channels for journalists, researchers, and whistleblowers.';
+      keywords = 'contact lakshya gupta, submit startup apology, report tech failure, whistleblowing PR failures, techiral contact';
+    }
+
+    document.title = title;
+
+    // Helper to update meta tags
+    const setMeta = (name: string, content: string, isProperty = false) => {
+      const selector = isProperty ? `meta[property="${name}"]` : `meta[name="${name}"]`;
+      let el = document.querySelector(selector);
+      if (!el) {
+        el = document.createElement('meta');
+        if (isProperty) {
+          el.setAttribute('property', name);
+        } else {
+          el.setAttribute('name', name);
+        }
+        document.head.appendChild(el);
+      }
+      el.setAttribute('content', content);
+    };
+
+    setMeta('description', description);
+    setMeta('keywords', keywords);
+    
+    // Open Graph
+    setMeta('og:title', title, true);
+    setMeta('og:description', description, true);
+    setMeta('og:url', window.location.href, true);
+    
+    // Twitter
+    setMeta('twitter:title', title);
+    setMeta('twitter:description', description);
+  }, [activeTab]);
 
   // Reset page when sorting changes
   useEffect(() => {
@@ -75,7 +146,7 @@ export default function App() {
   );
 
   return (
-    <div className="min-h-screen bg-white text-black font-serif container mx-auto p-4 max-w-5xl">
+    <main className="min-h-screen bg-white text-black font-serif container mx-auto p-4 max-w-5xl">
       <header className="border-b-4 border-black pb-4 mb-4">
         <div className="text-center">
           <h1 className="text-3xl font-bold mb-2 uppercase tracking-wide">
@@ -84,13 +155,41 @@ export default function App() {
           <p className="font-mono text-sm underline pb-2">
             They took your money. They messed up. Now they're sorry.
           </p>
-          <div className="mt-2 text-[#FF0000] font-bold font-mono text-sm blink inline-block border border-[#FF0000] p-1">
+          <div className="mt-2 text-[#FF0000] font-bold font-mono text-sm blink inline-block border border-[#FF0000] p-1 mb-2">
             [ INDEXED IN REAL-TIME ]
           </div>
+          <nav className="font-mono text-sm mt-2 mb-2" aria-label="Primary Navigation">
+            <button 
+              onClick={() => changeTab('home')} 
+              className={`hover:text-[#FF0000] ${activeTab === 'home' ? 'text-black font-bold no-underline' : 'text-[#0000EE] underline'}`}
+            >
+              [ Directory ]
+            </button>
+            <span className="mx-2 text-black">|</span>
+            <button 
+              onClick={() => changeTab('about')} 
+              className={`hover:text-[#FF0000] ${activeTab === 'about' ? 'text-black font-bold no-underline' : 'text-[#0000EE] underline'}`}
+            >
+              [ About ]
+            </button>
+            <span className="mx-2 text-black">|</span>
+            <button 
+              onClick={() => changeTab('contact')} 
+              className={`hover:text-[#FF0000] ${activeTab === 'contact' ? 'text-black font-bold no-underline' : 'text-[#0000EE] underline'}`}
+            >
+              [ Contact ]
+            </button>
+          </nav>
         </div>
       </header>
 
-      <table className="w-full border-collapse">
+      {activeTab === 'about' ? (
+        <About />
+      ) : activeTab === 'contact' ? (
+        <Contact />
+      ) : (
+        <section aria-label="Directory Content">
+          <table className="w-full border-collapse">
         <tbody>
           <tr>
             <td className="bg-[#e0e0e0] p-2 border-2 border-outset border-gray-400 font-mono text-sm">
@@ -169,18 +268,20 @@ export default function App() {
           {renderPaginationControls()}
         </>
       )}
+      </section>
+      )}
 
       <footer className="mt-12 border-t-4 border-black pt-4 text-center font-mono text-xs pb-12">
         <p>Processed by Startup Apologies Spider Bot v1.0. All right reserved.</p>
         <p className="mt-2 text-gray-700">
           Developed by <strong>Lakshya Gupta</strong> (Techiral). 18-year-old developer turning data into reality.
         </p>
-        <div className="flex justify-center gap-4 mt-2 mb-2 text-[#0000EE]">
-          <a href="https://www.linkedin.com/in/techiral" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#FF0000]">LinkedIn</a>
-          <a href="https://github.com/lakshyabuilds" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#FF0000]">GitHub</a>
-          <a href="https://www.youtube.com/@lakshyabuild" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#FF0000]">YouTube (@lakshyabuild)</a>
-          <a href="https://www.youtube.com/@techiral" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#FF0000]">YouTube (@techiral)</a>
-          <a href="https://www.instagram.com/lakshya.build" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#FF0000]">Instagram</a>
+        <div className="flex justify-center gap-4 mt-2 mb-2 text-[#0000EE] flex-wrap">
+          <a href="https://www.linkedin.com/in/techiral" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#FF0000]">Lakshya's LinkedIn profile</a>
+          <a href="https://github.com/lakshyabuilds" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#FF0000]">Lakshya's GitHub projects</a>
+          <a href="https://www.youtube.com/@lakshyabuild" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#FF0000]">YouTube channel (@lakshyabuild)</a>
+          <a href="https://www.youtube.com/@techiral" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#FF0000]">YouTube channel (@techiral)</a>
+          <a href="https://www.instagram.com/lakshya.build" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#FF0000]">Lakshya's Instagram page</a>
         </div>
         <p className="mt-2 font-bold text-[#FF0000] uppercase pt-2">Don't screw up next time.</p>
         <p className="mt-6 mb-8">
@@ -192,6 +293,6 @@ export default function App() {
           </button>
         </p>
       </footer>
-    </div>
+    </main>
   );
 }
