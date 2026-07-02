@@ -20,6 +20,144 @@ interface HNStory {
 let cachedApologies: HNStory[] = [];
 let lastFetchTime = 0;
 
+const MANUALLY_CURATED_NEWS: HNStory[] = [
+  {
+    id: "curated_1",
+    title: "Diabetes org apologizes for ejecting scientists over criticism of Trump",
+    url: "https://arstechnica.com/health/2026/06/diabetes-org-apologizes-for-ejecting-scientists-over-criticism-of-trump/",
+    points: 600,
+    author: "arstechnica",
+    createdAt: "2026-06-12T12:00:00Z",
+    numComments: 120
+  },
+  {
+    id: "curated_2",
+    title: "Anthropic apologizes for invisible Claude Fable guardrails",
+    url: "https://www.theverge.com/ai-artificial-intelligence/948280/anthropic-claude-fable-invisible-distillation-guardrail",
+    points: 511,
+    author: "theverge",
+    createdAt: "2026-06-11T12:00:00Z",
+    numComments: 444
+  },
+  {
+    id: "curated_3",
+    title: "Nova Ransomware issues an apology to Eriell Group",
+    url: "https://twitter.com/AlvieriD/status/2061712159654961280",
+    points: 60,
+    author: "AlvieriD",
+    createdAt: "2026-06-05T12:00:00Z",
+    numComments: 15
+  },
+  {
+    id: "curated_4",
+    title: "Gemini 3.5 deleted 28,745 lines, broke production, and wrote a fake post-mortem",
+    url: "https://www.reddit.com/r/Bard/s/ZVAxv5ezdP",
+    points: 1400,
+    author: "reddit_user",
+    createdAt: "2026-05-21T12:00:00Z",
+    numComments: 900
+  },
+  {
+    id: "curated_5",
+    title: "Elon Musk gets an apology from California regulators as a SpaceX lawsuit settled",
+    url: "https://apnews.com/article/california-coastal-commission-spacex-elon-musk-33065c34cc0555faa91ca2571924e4b3",
+    points: 320,
+    author: "apnews",
+    createdAt: "2026-05-03T12:00:00Z",
+    numComments: 70
+  },
+  {
+    id: "curated_6",
+    title: "Canva apologizes after its AI tool replaces 'Palestine' in designs",
+    url: "https://www.theverge.com/ai-artificial-intelligence/919028/canva-magic-layers-ai-replacing-palestine",
+    points: 790,
+    author: "theverge",
+    createdAt: "2026-04-27T12:00:00Z",
+    numComments: 310
+  },
+  {
+    id: "curated_7",
+    title: "Bluesky April 2026 Outage Post-Mortem",
+    url: "https://pckt.blog/b/jcalabro/april-2026-outage-post-mortem-219ebg2",
+    points: 141,
+    author: "jcalabro",
+    createdAt: "2026-04-10T12:00:00Z",
+    numComments: 79
+  },
+  {
+    id: "curated_8",
+    title: "Polymarket apologizes for allowing wagers on fate of U.S. pilots downed in Iran",
+    url: "https://www.nbcnews.com/news/us-news/polymarket-apologizes-allowing-wagers-fate-us-pilots-downed-iran-rcna266715",
+    points: 310,
+    author: "nbcnews",
+    createdAt: "2026-04-04T12:00:00Z",
+    numComments: 250
+  },
+  {
+    id: "curated_9",
+    title: "We messed up with the Windows 12 article. What we got wrong and how it happened",
+    url: "https://www.pcworld.com/article/3079754/we-messed-up-with-the-windows-12-article-what-we-got-wrong-and-how-it-happened.html",
+    points: 50,
+    author: "pcworld",
+    createdAt: "2026-03-07T12:00:00Z",
+    numComments: 20
+  },
+  {
+    id: "curated_10",
+    title: "Bazzite Post-Mortem",
+    url: "https://ba.antheas.dev/bazzite-postmortem.html",
+    points: 136,
+    author: "antheas",
+    createdAt: "2026-02-10T12:00:00Z",
+    numComments: 143
+  },
+  {
+    id: "curated_11",
+    title: "Shai-Hulud compromised a dev machine and raided GitHub org access: a post-mortem",
+    url: "https://trigger.dev/blog/shai-hulud-postmortem",
+    points: 262,
+    author: "trigger.dev",
+    createdAt: "2025-12-14T12:00:00Z",
+    numComments: 184
+  },
+  {
+    id: "curated_12",
+    title: "The Times apologizes for fake De Blasio interview criticizing Mamdani",
+    url: "https://www.theguardian.com/us-news/2025/oct/29/times-de-blasio-fake-interview-mamdani",
+    points: 290,
+    author: "theguardian",
+    createdAt: "2025-10-30T12:00:00Z",
+    numComments: 100
+  },
+  {
+    id: "curated_13",
+    title: "Hi, it's me, Wikipedia, and I am ready for your apology",
+    url: "https://www.mcsweeneys.net/articles/hi-its-me-wikipedia-and-i-am-ready-for-your-apology",
+    points: 207,
+    author: "mcsweeneys",
+    createdAt: "2025-10-28T12:00:00Z",
+    numComments: 152
+  },
+  {
+    id: "curated_14",
+    title: "Tinycolor supply chain attack post-mortem",
+    url: "https://sigh.dev/posts/ctrl-tinycolor-post-mortem/",
+    points: 168,
+    author: "sigh.dev",
+    createdAt: "2025-09-17T12:00:00Z",
+    numComments: 80
+  },
+  {
+    id: "curated_15",
+    title: "Replit's CEO apologizes after its AI agent wiped a company's code base",
+    url: "https://www.businessinsider.com/replit-ceo-apologizes-ai-coding-tool-delete-company-database-2025-7",
+    points: 1790,
+    author: "businessinsider",
+    createdAt: "2025-07-22T12:00:00Z",
+    numComments: 1600
+  }
+];
+
 // Function to fetch data from HN Algolia
 async function fetchApologies(): Promise<HNStory[]> {
   try {
@@ -85,15 +223,16 @@ async function fetchApologies(): Promise<HNStory[]> {
 
 async function getApologies() {
   const now = Date.now();
-  // 3 minute cache
-  if (cachedApologies.length === 0 || now - lastFetchTime > 3 * 60 * 1000) {
+  // 30 second cache for real-time updates
+  if (cachedApologies.length === 0 || now - lastFetchTime > 30 * 1000) {
     lastFetchTime = now;
     // If empty, await it. If not, refresh in background.
     if (cachedApologies.length === 0) {
-      cachedApologies = await fetchApologies();
+      const fetched = await fetchApologies();
+      cachedApologies = [...MANUALLY_CURATED_NEWS, ...fetched];
     } else {
       fetchApologies().then(data => {
-        if (data.length > 0) cachedApologies = data;
+        if (data.length > 0) cachedApologies = [...MANUALLY_CURATED_NEWS, ...data];
       });
     }
   }

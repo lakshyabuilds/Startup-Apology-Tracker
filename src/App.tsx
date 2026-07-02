@@ -174,10 +174,7 @@ export default function App() {
   }, [sortMode]);
 
   useEffect(() => {
-    if (window.__INITIAL_DATA__) {
-      setApologies(window.__INITIAL_DATA__);
-      setLoading(false);
-    } else {
+    const fetchData = () => {
       fetch('/api/apologies')
         .then(res => res.json())
         .then(data => {
@@ -190,7 +187,18 @@ export default function App() {
           setLoading(false);
         })
         .catch(() => setLoading(false));
+    };
+
+    if (window.__INITIAL_DATA__) {
+      setApologies(window.__INITIAL_DATA__);
+      setLoading(false);
+    } else {
+      fetchData();
     }
+
+    // Poll every 15 seconds for real-time effect
+    const interval = setInterval(fetchData, 15000);
+    return () => clearInterval(interval);
   }, []);
 
   const sortedApologies = useMemo(() => {
