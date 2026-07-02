@@ -229,10 +229,27 @@ async function getApologies() {
     // If empty, await it. If not, refresh in background.
     if (cachedApologies.length === 0) {
       const fetched = await fetchApologies();
-      cachedApologies = [...MANUALLY_CURATED_NEWS, ...fetched];
+      
+      const merged = [...MANUALLY_CURATED_NEWS, ...fetched];
+      const uniqueKeys = new Set();
+      cachedApologies = merged.filter(story => {
+        const keyUrl = story.url || story.title;
+        if (uniqueKeys.has(keyUrl)) return false;
+        uniqueKeys.add(keyUrl);
+        return true;
+      });
     } else {
       fetchApologies().then(data => {
-        if (data.length > 0) cachedApologies = [...MANUALLY_CURATED_NEWS, ...data];
+        if (data.length > 0) {
+          const merged = [...MANUALLY_CURATED_NEWS, ...data];
+          const uniqueKeys = new Set();
+          cachedApologies = merged.filter(story => {
+            const keyUrl = story.url || story.title;
+            if (uniqueKeys.has(keyUrl)) return false;
+            uniqueKeys.add(keyUrl);
+            return true;
+          });
+        }
       });
     }
   }
